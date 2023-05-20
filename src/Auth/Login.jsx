@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import "./styles.css";
 
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+
+import CloseIcon from '@mui/icons-material/Close';
+
 import google from "./media/google.svg";
 import facebook from "./media/facebook.svg";
 import apple from "./media/apple.svg";
@@ -18,19 +23,32 @@ export default function SignUp() {
 
   const [userId, setUserId] = useState("");
 
+  const [showerror,setShowerror] = useState(0);
+  const [open, setOpen] = React.useState(true);
+
   function SignUp() {
     if (username && password) {
       axios
         .post("http://localhost:9000/api/validate", { username, password })
         .then((res) => {
-          setState(2);
-          console.log({
-            userId: res.data.userId,
-          })
-          setUserId(res.data.userId);
+          if(res.data.userId)
+          {
+            setState(2);
+            console.log({
+              userId: res.data.userId,
+            })
+            setUserId(res.data.userId);
+          }
+          else{
+            console.log('here')
+            setShowerror(true);
+          }
+          
         })
         .catch((err) => {
-          console.log(err)
+          console.log(err);
+          setShowerror(1);
+
         })
         
     } else {
@@ -46,18 +64,22 @@ export default function SignUp() {
             setState(3);
           }
           else{
-            console.log('errororos')
+            console.log('errororos');
+          setShowerror(2);
+
           }
           console.log(res);
         })
         .catch((err) => {
           console.log(err);
+
         });
   }
 
   return (
     <>
       <div id="mainDiv">
+        
         {state === 1 ? (
           <>
             <h2>Log In</h2>
@@ -81,9 +103,14 @@ export default function SignUp() {
 
             <div id="buttonsDiv">
               <Button variant="contained" onClick={() => SignUp()}>
-                Sign Up!
+                Log In!
               </Button>
             </div>
+            {showerror===1 && 
+            <Alert variant="outlined" severity="error">
+            User not registered!
+          </Alert>
+          }
           </>
         ) : state === 2 ? (
           <>
@@ -105,10 +132,19 @@ export default function SignUp() {
                 Verify
               </Button>
             </div>
+            {showerror===2 && 
+            <Alert variant="outlined" severity="error">
+            OTP Incorrect!
+          </Alert>
+          }
           </>
         ) : state === 3 ? (
           <>
             <h2>Successfully Authenticated!</h2>
+            <br/>
+            <Button variant="contained" onClick={() => navigate('/')}>
+                Logout
+              </Button>
           </>
         ) : null}
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import "./styles.css";
+import Alert from '@mui/material/Alert';
 
 import google from "./media/google.svg";
 import facebook from "./media/facebook.svg";
@@ -88,9 +89,16 @@ export default function SignUp() {
             <h2>Verify your Identity using Authenticator App</h2>
 
             <div id="inputDiv">
+              <p
+              style={{
+                margin: '0 auto',
+                textAlign: 'center'
+
+              }}>Install Auth app in your Mobile device and please scan the below QR Code!</p>
               <img src={qrCode} style={{
                 width: '10rem',
-                height: '10rem'
+                height: '10rem',
+                margin: '0 auto'
               }} />
               <TextField
                 id="outlined-basic"
@@ -110,6 +118,10 @@ export default function SignUp() {
         ) : state === 3 ? (
           <>
             <h2>Successfully Authenticated!</h2>
+            <br/>
+            <Button variant="contained" onClick={() => navigate('/')}>
+                Logout
+              </Button>
           </>
         ) : null}
 
